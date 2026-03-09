@@ -13,6 +13,8 @@ jobs:
     name: Deploy to Cloudflare Workers
     runs-on: ubuntu-latest
     needs: []
+    permissions:
+      contents: read
     environment:
       name: production
       url: https://mcp-server-template.${{ secrets.CLOUDFLARE_ACCOUNT_SUBDOMAIN }}.workers.dev

@@ -46,10 +46,10 @@ sequenceDiagram
     participant Worker as Cloudflare Worker<br/>(Hono + MCP SDK)
     participant API as External REST API
 
-    Client->>Worker: GET /sse (Authorization: Bearer <key>)
-    Worker-->>Client: SSE stream established (sessionId)
+    Client->>Worker: GET /mcp (Authorization: Bearer <key>)
+    Worker-->>Client: SSE stream established (mcp-session-id header)
 
-    Client->>Worker: POST /message?sessionId=<id>
+    Client->>Worker: POST /mcp (mcp-session-id header)
     Note over Worker: Routes to McpServer<br/>for this session
 
     Worker->>API: GET /search?q=... (Bearer token)
@@ -59,8 +59,8 @@ sequenceDiagram
 ```
 
 **Key design decisions:**
-- **SSE transport** — uses the MCP SDK's `SSEServerTransport` over Cloudflare Workers' Web Streams API
-- **Per-session isolation** — each `GET /sse` creates an independent `McpServer` instance
+- **Streamable HTTP transport** — uses the MCP SDK's `WebStandardStreamableHTTPServerTransport` with native Cloudflare Workers Web Streams API
+- **Per-session isolation** — each `GET /mcp` creates an independent `McpServer` instance
 - **Auth middleware** — timing-safe Bearer token check guards all MCP endpoints
 - **Retry + timeout** — `ApiClient` handles 429/5xx with exponential backoff automatically
 
@@ -120,10 +120,10 @@ pnpm dev
 # Health check
 curl http://localhost:8787/health
 
-# Connect to SSE stream
+# Connect to MCP streamable HTTP endpoint (SSE stream)
 curl -N \
   -H "Authorization: Bearer your-mcp-auth-key" \
-  http://localhost:8787/sse
+  http://localhost:8787/mcp
 ```
 
 ### 5. Connect an MCP Client
@@ -134,7 +134,7 @@ Add to your **Claude Desktop** `claude_desktop_config.json`:
 {
   "mcpServers": {
     "my-api": {
-      "url": "http://localhost:8787/sse",
+      "url": "http://localhost:8787/mcp",
       "headers": {
         "Authorization": "Bearer your-mcp-auth-key"
       }

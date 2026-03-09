@@ -382,10 +382,12 @@ interface ${toCamelCase(op.toolName).replace(/^./, (c) => c.toUpperCase())}Respo
  * @param client - Authenticated ApiClient for upstream requests.
  */
 export function ${op.functionName}(server: McpServer, client: ApiClient): void {
-  server.tool(
+  server.registerTool(
     '${op.toolName}',
-    '${op.description.replace(/'/g, "\\'")}',
-    ${schemaName}.shape,
+    {
+      description: '${op.description.replace(/'/g, "\\'")}',
+      inputSchema: ${schemaName},
+    },
     async (params) => {
       let response: ${toCamelCase(op.toolName).replace(/^./, (c) => c.toUpperCase())}Response;
 

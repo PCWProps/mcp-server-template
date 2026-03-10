@@ -1,0 +1,51 @@
+{
+  "name": "mcp-server-template",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20",
+      "nvmVersion": "latest"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "cloudflare.cloudflare-workers-bindings",
+        "ms-vscode.vscode-typescript-next",
+        "streetsidesoftware.code-spell-checker",
+        "usernamehw.errorlens",
+        "bradlc.vscode-tailwindcss",
+        "ZixuanChen.vitest-explorer",
+        "orta.vscode-jest"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": true,
+        "eslint.useFlatConfig": true,
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "forwardPorts": [8787],
+  "portsAttributes": {
+    "8787": {
+      "label": "Wrangler Dev Server",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "npm install -g pnpm && pnpm install",
+  "postStartCommand": "echo '\\n🚀 MCP Server Template dev container ready!\\nRun: pnpm dev\\n'",
+  "remoteUser": "node",
+  "containerEnv": {
+    "NODE_ENV": "development"
+  }
+}

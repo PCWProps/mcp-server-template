@@ -1,0 +1,66 @@
+version: 2
+
+updates:
+  # npm / pnpm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(dev-deps)"
+      include: "scope"
+    groups:
+      cloudflare:
+        patterns:
+          - "@cloudflare/*"
+          - "wrangler"
+      mcp-sdk:
+        patterns:
+          - "@modelcontextprotocol/*"
+      typescript-tooling:
+        patterns:
+          - "typescript"
+          - "tsx"
+          - "@types/*"
+      testing:
+        patterns:
+          - "vitest"
+          - "msw"
+          - "@vitest/*"
+      linting:
+        patterns:
+          - "eslint*"
+          - "@eslint/*"
+          - "prettier*"
+    ignore:
+      # Only allow minor/patch auto-updates for major framework deps
+      - dependency-name: "hono"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@modelcontextprotocol/sdk"
+        update-types: ["version-update:semver-major"]
+    versioning-strategy: lockfile-only
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "automated"
+    commit-message:
+      prefix: "chore(actions)"
+      include: "scope"

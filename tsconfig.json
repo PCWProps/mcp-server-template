@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    // Target modern JavaScript for Cloudflare Workers (V8-based)
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+
+    // Allow .js extensions in imports (required for ESM in Workers)
+    "allowImportingTsExtensions": false,
+    "resolveJsonModule": true,
+
+    // Output settings — Wrangler handles transpilation, so we only typecheck
+    "noEmit": true,
+
+    // Strict type-checking
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Module quality
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+
+    // Interop
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+
+    // Type declarations
+    "types": ["@cloudflare/workers-types", "vitest/globals"],
+
+    // Paths
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "scripts/**/*.ts"],
+  "exclude": ["node_modules", "dist", ".wrangler", "coverage"]
+}

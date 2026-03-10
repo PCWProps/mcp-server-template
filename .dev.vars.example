@@ -1,0 +1,13 @@
+# Local development environment variables
+# Copy this file to .dev.vars and fill in your values.
+# .dev.vars is git-ignored — never commit real credentials!
+
+# Base URL for the external API this MCP server wraps
+TARGET_API_BASE_URL=https://api.example.com
+
+# API key for authenticating with the target API
+TARGET_API_KEY=your-api-key-here
+
+# MCP auth key — clients must present this in Authorization: Bearer <key>
+# Generate with: openssl rand -hex 32
+MCP_AUTH_KEY=your-mcp-auth-key-here

@@ -1,0 +1,161 @@
+name: 🔧 API Tool Request
+description: Request a new MCP tool wrapping an external API endpoint
+title: "[Tool Request]: "
+labels: ["tool-request", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to request a new MCP tool that wraps an external API endpoint.
+        New tools are generated using the OpenAPI ingestion script (`scripts/ingest-openapi.ts`).
+        For best results, provide as much detail about the target API as possible.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Pre-flight Checklist
+      options:
+        - label: I have checked that this tool does not already exist in `src/tools/`.
+          required: true
+        - label: I have verified the API endpoint is publicly accessible or have arrangements for private access.
+          required: true
+
+  - type: input
+    id: api_endpoint
+    attributes:
+      label: API Endpoint URL
+      description: The full URL of the API endpoint this tool should wrap.
+      placeholder: "https://api.example.com/v2/search"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: http_method
+    attributes:
+      label: HTTP Method
+      options:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+    validations:
+      required: true
+
+  - type: input
+    id: tool_name
+    attributes:
+      label: Suggested Tool Name
+      description: |
+        The snake_case name for the MCP tool (e.g., `search_repositories`, `get_user_profile`).
+      placeholder: "search_items"
+    validations:
+      required: true
+
+  - type: textarea
+    id: required_params
+    attributes:
+      label: Required Parameters
+      description: |
+        List all required parameters with their types and descriptions.
+        Use the format: `paramName (type): description`
+      placeholder: |
+        query (string): The search query string
+        limit (number, 1-100): Maximum number of results to return
+        filter (enum: "active"|"archived"): Filter by status
+    validations:
+      required: true
+
+  - type: textarea
+    id: optional_params
+    attributes:
+      label: Optional Parameters
+      description: |
+        List all optional parameters with their types, defaults, and descriptions.
+      placeholder: |
+        offset (number, default: 0): Pagination offset
+        sort_by (string, default: "relevance"): Sort field
+        include_metadata (boolean, default: false): Include extra metadata
+
+  - type: textarea
+    id: output_format
+    attributes:
+      label: Desired Output Format
+      description: |
+        Describe what the tool response should look like in the MCP response.
+        Should it be a markdown table? A JSON summary? A formatted list?
+      placeholder: |
+        Return a markdown-formatted list of results, each item showing:
+        - **Title** (linked to URL)
+        - Description snippet
+        - Metadata (date, author, category)
+
+        Include a summary line: "Found X results for 'query'"
+    validations:
+      required: true
+
+  - type: input
+    id: api_docs_url
+    attributes:
+      label: API Documentation URL
+      description: Link to the official API documentation for this endpoint.
+      placeholder: "https://docs.example.com/api/search"
+    validations:
+      required: true
+
+  - type: input
+    id: openapi_spec_url
+    attributes:
+      label: OpenAPI / Swagger Spec URL
+      description: If available, provide a direct link to the OpenAPI spec (JSON or YAML).
+      placeholder: "https://api.example.com/openapi.json"
+
+  - type: textarea
+    id: auth_requirements
+    attributes:
+      label: Authentication Requirements
+      description: |
+        How does this API authenticate? (Bearer token, API key header, OAuth2, etc.)
+        Does it use a different auth mechanism than `TARGET_API_KEY`?
+      placeholder: "Uses Bearer token in Authorization header, same as TARGET_API_KEY env var."
+    validations:
+      required: true
+
+  - type: textarea
+    id: example_request_response
+    attributes:
+      label: Example Request & Response
+      description: |
+        Provide an example `curl` request and the expected JSON response.
+      render: shell
+      placeholder: |
+        # Request
+        curl -H "Authorization: Bearer $TOKEN" \
+          "https://api.example.com/v2/search?query=mcp&limit=5"
+
+        # Response
+        {
+          "results": [...],
+          "total": 42,
+          "page": 1
+        }
+
+  - type: textarea
+    id: error_handling
+    attributes:
+      label: Known Error Cases
+      description: |
+        List any known error responses this endpoint returns and how the tool should handle them.
+      placeholder: |
+        - 400: Invalid query — return user-friendly validation message
+        - 404: No results found — return empty result message
+        - 429: Rate limited — already handled by ApiClient retry logic
+
+  - type: checkboxes
+    id: pr_willingness
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to submit a pull request to implement this tool.
